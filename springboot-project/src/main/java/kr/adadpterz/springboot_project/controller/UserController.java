@@ -1,0 +1,82 @@
+package kr.adadpterz.springboot_project.controller;
+
+import kr.adadpterz.springboot_project.dto.user.*;
+import kr.adadpterz.springboot_project.service.UserService;
+import kr.adadpterz.springboot_project.response.ApiResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+@RestController
+@RequestMapping("/users")
+@RequiredArgsConstructor
+public class UserController {
+
+    private final UserService userService;
+
+    @PostMapping("/signup")
+    public ResponseEntity<ApiResponse<UserResponseDto>> createUser (
+            @Valid @RequestBody UserRequestDto request
+    ) {
+        UserResponseDto result = userService.createUser(request);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .header("Location", "/users/signup" + result.getUserId())
+                .body(ApiResponse.of("USER_CREATED",result, null));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<UserResponseDto>> login (
+            @Valid @RequestBody LoginRequestDto request
+    ) {
+        UserResponseDto result = userService.login(request);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.of("LOGIN_SUCCESS", result, null));
+    }
+
+    @PatchMapping("/signup/{userId}")
+    public ResponseEntity<ApiResponse<UserUpdateResponseDto>> updateNickname(
+            @PathVariable Long userId,
+            @Valid @RequestBody UserUpdateRequestDto request
+    ) {
+        UserUpdateResponseDto result = userService.updateUserInfo(userId, request);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.of("NICKNAME_UPDATED", result,null));
+    }
+
+    @PutMapping("/signup/{userId}/password")
+    public ResponseEntity<ApiResponse<UserResponseDto>> updatePassword(
+            @PathVariable Long userId,
+            @Valid @RequestBody PasswordUpdateRequestDto request
+    ) {
+        UserResponseDto result = userService.updatePassword(userId, request);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.of("NICKNAME_UPDATED", result));
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<ApiResponse<UserResponseDto>> getUser(
+            @PathVariable Long userId
+    ) {
+        UserResponseDto result = userService.getUser(userId);
+        return ResponseEntity.ok(
+                ApiResponse.of("USER_RETRIEVED", result)
+        );
+    }
+
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<ApiResponse<UserResponseDto>> deleteUser(
+            @PathVariable Long userId
+    ) {
+        UserResponseDto result = userService.deleteUser(userId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.of("USER_DELETED", result));
+    }
+}
