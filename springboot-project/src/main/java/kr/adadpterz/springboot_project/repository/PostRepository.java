@@ -10,7 +10,6 @@ public class PostRepository {
 
     private static final Map<Long, Post> database = new HashMap<>();
 
-    // TODO: sequence 조사
     private static Long sequence = 0L;
 
     public Post save(Post post) {

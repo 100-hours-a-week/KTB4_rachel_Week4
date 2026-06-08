@@ -7,6 +7,7 @@ import kr.adadpterz.springboot_project.repository.UserRepository;
 import kr.adadpterz.springboot_project.entity.User;
 
 import kr.adadpterz.springboot_project.exception.NotFoundException;
+import kr.adadpterz.springboot_project.exception.DuplicateException;
 import kr.adadpterz.springboot_project.exception.PasswordMismatchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,19 @@ public class UserService {
 
     public UserResponseDto createUser(UserRequestDto request){
 
+        // 비밀번호 확인 로직
         if (!request.getPassword().equals(request.getPasswordCheck())) { // TODO: 비밀번호 확인하는 메서드 만들어야 하나? - 굳이.. 회원가입할때, 변경할때만 if문 이용하므로. 그치만 따로 뺀다면 어떻게 빼야하지?
             throw new PasswordMismatchException("PASSWORD_MISMATCH");
+        }
+
+        // 이메일 중복 검사
+        if(userRepository.findByEmail(request.getEmail()).isPresent()) {// 이미 있는 이메일이라면
+            throw new DuplicateException("EMAIL_ALREADY_EXISTS");
+        }
+
+        // 닉네임 중복 검사
+        if(userRepository.findByNickname(request.getNickname()).isPresent()) {// 이미 있는 이메일이라면
+            throw new DuplicateException("NickName_ALREADY_EXISTS");
         }
 
         User user = new User(
@@ -33,7 +45,7 @@ public class UserService {
         );
 
         User savedUser = userRepository.save(user); // userResponsitory가 인터페이스, User타입으로 구현체
-        return new UserResponseDto(savedUser); // 여기는 웹한테 줄 것도 아닌데 왜 return이 UserResponseDto이지
+        return new UserResponseDto(savedUser);
     }
 
 
@@ -76,7 +88,7 @@ public class UserService {
 
 
 
-//    // TODO: 레포지토리 deleteUser 부분
+
     public UserResponseDto deleteUser(Long userId) {
         User user = userRepository.deleteUser(userId)
                 .orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));

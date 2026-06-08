@@ -1,12 +1,9 @@
 package kr.adadpterz.springboot_project.controller;
 
 import jakarta.validation.Valid;
-import kr.adadpterz.springboot_project.dto.user.UserRequestDto;
-import kr.adadpterz.springboot_project.dto.user.UserResponseDto;
 import kr.adadpterz.springboot_project.dto.post.PostRequestDto;
 import kr.adadpterz.springboot_project.dto.post.PostResponseDto;
 import kr.adadpterz.springboot_project.service.PostService;
-import kr.adadpterz.springboot_project.service.UserService;
 import kr.adadpterz.springboot_project.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +18,7 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<ApiResponse<List<PostResponseDto>>> getAllPost () {
         List<PostResponseDto> result = postService.getAllPost(); // TODO: 전체 조회
         return ResponseEntity
@@ -40,7 +37,7 @@ public class PostController {
                 .body(ApiResponse.of("POST_RETRIEVED",result, null));
     }
 
-
+    // TODO: post DTO 다시 만들어야 함.
     @PostMapping("/users/{userId}")
     public ResponseEntity<ApiResponse<PostResponseDto>> createPost(
             @PathVariable Long userId,
@@ -52,7 +49,7 @@ public class PostController {
                 .body(ApiResponse.of("POST_CREATED", result));
     }
 
-    @PatchMapping("/{postId}")
+    @PatchMapping("/{postId}") //TODO: 수정 DTO 다시 만들어야함.
     public ResponseEntity<ApiResponse<PostResponseDto>> updatePost (
             @PathVariable Long postId,
             @Valid @RequestBody PostRequestDto request
@@ -63,7 +60,7 @@ public class PostController {
                 .body(ApiResponse.of("POST_UPDATED", result));
     }
 
-    @DeleteMapping("/{postId}")
+    @DeleteMapping("/{postId}") // TODO: post_id 나오도록 수정해야함. 삭제 DTO 자체를 다시 만들어야함
     public ResponseEntity<ApiResponse<Void>> deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);
         return ResponseEntity

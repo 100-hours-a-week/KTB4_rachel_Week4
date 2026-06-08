@@ -14,20 +14,19 @@ public class UserRepository {
     }
 
 
-    // TODO: 이메일, 닉네임 Get을 해서 중복 검사해주기(중복 검사는 service에서)
+    // TODO: 이메일, 닉네임 Get을 해서 중복 검사해주기(중복 검사는 service에서?)
     public Optional<User> findByEmail(String email) {
         return database.values().stream()
                 .filter(user -> user.getEmail().equals(email))
-                .findFirst(); // 없으면 안전하게 Optional.empty() 반환
+                .findFirst(); // 없으면 안전하게 Optional.empty() 반환 // 이거는 One to One이랑 가능한건데 아니라면? 어떻게 해야하지
     }
 
 
-//
-//    public Optional<User> findByNickname(String email) {
-//        return database.values().stream()
-//                .filter(user -> user.getEmail().equals(email))
-//                .findFirst(); // 없으면 안전하게 Optional.empty() 반환
-//    }
+    public Optional<User> findByNickname(String nickname) {
+        return database.values().stream()
+                .filter(user -> user.getNickname().equals(nickname))
+                .findFirst(); // 없으면 안전하게 Optional.empty() 반환
+    }
 
 
 
@@ -38,7 +37,8 @@ public class UserRepository {
         return user;
     }
 
-    public Optional<User> deleteUser(Long userId) {
+    public Optional<User> deleteUser(Long userId)
+    {
         return Optional.ofNullable(database.remove(userId));
     }
 

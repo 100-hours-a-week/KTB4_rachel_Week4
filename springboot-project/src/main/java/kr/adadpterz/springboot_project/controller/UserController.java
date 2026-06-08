@@ -37,7 +37,7 @@ public class UserController {
                 .body(ApiResponse.of("LOGIN_SUCCESS", result, null));
     }
 
-    @PatchMapping("/signup/{userId}")
+    @PatchMapping("/{userId}")
     public ResponseEntity<ApiResponse<UserUpdateResponseDto>> updateNickname(
             @PathVariable Long userId,
             @Valid @RequestBody UserUpdateRequestDto request
@@ -48,7 +48,7 @@ public class UserController {
                 .body(ApiResponse.of("NICKNAME_UPDATED", result,null));
     }
 
-    @PutMapping("/signup/{userId}/password")
+    @PutMapping("/{userId}/password")
     public ResponseEntity<ApiResponse<UserResponseDto>> updatePassword(
             @PathVariable Long userId,
             @Valid @RequestBody PasswordUpdateRequestDto request

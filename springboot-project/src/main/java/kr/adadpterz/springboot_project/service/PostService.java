@@ -23,7 +23,7 @@ public class PostService {
 
 
     public PostResponseDto createPost(Long userId, PostRequestDto request) { // TODO: 언제 userId를 주고 받는걸까
-        // User author = new UserRepository();
+
         User author = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("USER_NOT_FOUND"));
 
@@ -56,7 +56,7 @@ public class PostService {
     public PostResponseDto updatePost(Long postId, PostRequestDto request) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException("POST_NOT_FOUND"));
-
+;
         post.changeTitle(request.getTitle());
         post.changeContent(request.getContent());
         post.changeImage(request.getImage());
